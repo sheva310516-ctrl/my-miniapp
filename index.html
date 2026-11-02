@@ -334,17 +334,32 @@
 
   <body>
 
-  <!-- ===== ТИТУЛЬНЫЙ ЭКРАН ===== -->
+   <!-- ===== ТИТУЛЬНЫЙ ЭКРАН ===== -->
   <div id="screen-main" class="screen active">
+    <div class="hello" id="helloText">👋 Добро пожаловать!</div>
     <div class="title">РАБОТА РЯДОМ</div>
     <div class="subtitle">биржа заявок по РФ</div>
-    <div class="hello" id="helloText"></div>
     <div class="buttons">
-      <button class="glass-btn" onclick="openCustomer()">Найти исполнителя</button>
-      <button class="glass-btn" onclick="openExecutor()">Стать исполнителем</button>
+      <button class="glass-btn" onclick="goTo('screen-customer')">Найти исполнителя</button>
+      <button class="glass-btn" onclick="goTo('screen-executor')">Стать исполнителем</button>
     </div>
   </div>
 
+  <script>
+    (function () {
+      try {
+        var tg = window.Telegram && window.Telegram.WebApp;
+        if (tg) {
+          tg.expand();
+          var user = tg.initDataUnsafe && tg.initDataUnsafe.user;
+          if (user && user.first_name) {
+            document.getElementById('helloText').textContent = '👋 Привет, ' + user.first_name + '!';
+          }
+        }
+      } catch (e) {}
+    })();
+  </script>
+   
   <!-- ===== ЭКРАН: ЗАКАЗЧИК ===== -->
   <div id="screen-customer" class="screen">
     <button class="btn-back" onclick="goMain()">← Назад</button>
