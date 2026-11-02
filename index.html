@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Мой Mini App</title>
+  <script src="https://telegram.org/js/telegram-web-app.js"></script>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      padding: 20px;
+      text-align: center;
+    }
+    button {
+      padding: 12px 24px;
+      font-size: 16px;
+      margin: 10px;
+      border-radius: 10px;
+      border: none;
+      background: #2481cc;
+      color: white;
+    }
+    #roleButtons {
+      display: none;
+    }
+  </style>
+</head>
+<body>
+
+  <h2>Привет! 👋</h2>
+  <p id="userInfo">Загрузка данных...</p>
+
+  <div id="roleButtons">
+    <button onclick="chooseRole('customer')">Я заказчик</button>
+    <button onclick="chooseRole('worker')">Я исполнитель</button>
+  </div>
+
+  <p id="status"></p>
+
+  <script>
+    const tg = window.Telegram.WebApp;
+    tg.expand();
+
+    const user = tg.initDataUnsafe?.user;
+
+    if (user) {
+      document.getElementById('userInfo').innerText =
+        `Имя: ${user.first_name || ''} ${user.last_name || ''}\nUsername: @${user.username || 'нет'}\nTelegram ID: ${user.id}`;
+      document.getElementById('roleButtons').style.display = 'block';
+    } else {
+      document.getElementById('userInfo').innerText =
+        'Не удалось получить данные пользователя. Открой приложение через Telegram.';
+    }
+
+    function chooseRole(role) {
+      document.getElementById('status').innerText = `Выбрана роль: ${role}. Сохраняем...`;
+      // Здесь дальше подключим Supabase, чтобы сохранить пользователя в базу
+      console.log('Пользователь:', user, 'Роль:', role);
+    }
+  </script>
+
+</body>
+</html>
