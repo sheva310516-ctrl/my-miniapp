@@ -1,63 +1,209 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Мой Mini App</title>
-  <script src="https://telegram.org/js/telegram-web-app.js"></script>
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      padding: 20px;
-      text-align: center;
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>РАБОТА РЯДОМ | РФ</title>
+<script src="https://telegram.org/js/telegram-web-app.js"></script>
+<style>
+  * {
+    box-sizing: border-box;
+  }
+
+  html, body {
+    margin: 0;
+    padding: 0;
+    height: 100%;
+    font-family: 'Segoe UI', Roboto, sans-serif;
+  }
+
+  body {
+    min-height: 100vh;
+    background: linear-gradient(135deg, #020111 0%, #0b1033 25%, #0f2748 50%, #123a5c 70%, #1b4b6b 85%, #0a1a33 100%);
+    background-size: 400% 400%;
+    animation: aurora 18s ease infinite;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    padding-top: 14vh;
+    padding-left: 20px;
+    padding-right: 20px;
+    color: #ffffff;
+    overflow-x: hidden;
+    position: relative;
+  }
+
+  /* мягкие световые пятна поверх фона, имитация сияния */
+  body::before, body::after {
+    content: "";
+    position: fixed;
+    border-radius: 50%;
+    filter: blur(60px);
+    z-index: 0;
+    animation: float 10s ease-in-out infinite;
+  }
+
+  body::before {
+    top: 10%;
+    left: -10%;
+    width: 300px;
+    height: 300px;
+    background: rgba(80, 220, 180, 0.25);
+  }
+
+  body::after {
+    bottom: 5%;
+    right: -10%;
+    width: 350px;
+    height: 350px;
+    background: rgba(90, 140, 255, 0.25);
+    animation-delay: 3s;
+  }
+
+  @keyframes aurora {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+  }
+
+  @keyframes float {
+    0%, 100% { transform: translateY(0px) translateX(0px); }
+    50% { transform: translateY(40px) translateX(20px); }
+  }
+
+  .content {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    width: 100%;
+    max-width: 420px;
+    opacity: 0;
+    transform: translateY(20px);
+    animation: fadeInUp 1s ease forwards;
+  }
+
+  @keyframes fadeInUp {
+    to {
+      opacity: 1;
+      transform: translateY(0);
     }
-    button {
-      padding: 12px 24px;
-      font-size: 16px;
-      margin: 10px;
-      border-radius: 10px;
-      border: none;
-      background: #2481cc;
-      color: white;
-    }
-    #roleButtons {
-      display: none;
-    }
-  </style>
+  }
+
+  .title {
+    font-size: 22px;
+    font-weight: 700;
+    letter-spacing: 1px;
+    margin-bottom: 6px;
+    background: linear-gradient(90deg, #6ee7b7, #60a5fa, #a78bfa);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .subtitle {
+    font-size: 14px;
+    color: rgba(255,255,255,0.6);
+    margin-bottom: 28px;
+  }
+
+  .greeting {
+    font-size: 18px;
+    font-weight: 600;
+    margin-bottom: 4px;
+  }
+
+  .user-info {
+    font-size: 13px;
+    color: rgba(255,255,255,0.55);
+    margin-bottom: 36px;
+    line-height: 1.6;
+  }
+
+  .buttons {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    width: 100%;
+  }
+
+  .glass-btn {
+    position: relative;
+    padding: 16px 24px;
+    font-size: 16px;
+    font-weight: 600;
+    color: #ffffff;
+    border-radius: 18px;
+    border: 1px solid rgba(255,255,255,0.25);
+    background: rgba(255, 255, 255, 0.08);
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
+    cursor: pointer;
+    overflow: hidden;
+    transition: transform 0.25s ease, box-shadow 0.25s ease;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.25);
+  }
+
+  .glass-btn::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    padding: 1px;
+    border-radius: 18px;
+    background: linear-gradient(135deg, #6ee7b7, #60a5fa, #a78bfa);
+    -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+    -webkit-mask-composite: xor;
+    mask-composite: exclude;
+    opacity: 0.6;
+  }
+
+  .glass-btn:active {
+    transform: scale(0.97);
+  }
+
+  .glass-btn:hover {
+    box-shadow: 0 6px 28px rgba(96, 165, 250, 0.35);
+  }
+</style>
 </head>
 <body>
 
-  <h2>Привет! 👋</h2>
-  <p id="userInfo">Загрузка данных...</p>
+  <div class="content">
+    <div class="title">РАБОТА РЯДОМ | РФ</div>
+    <div class="subtitle">Найди работу или исполнителя рядом с тобой</div>
 
-  <div id="roleButtons">
-    <button onclick="chooseRole('customer')">Я заказчик</button>
-    <button onclick="chooseRole('worker')">Я исполнитель</button>
+    <div class="greeting" id="greeting">Привет!</div>
+    <div class="user-info" id="userInfo">Загрузка данных...</div>
+
+    <div class="buttons">
+      <button class="glass-btn" onclick="chooseRole('customer')">Я заказчик</button>
+      <button class="glass-btn" onclick="chooseRole('executor')">Я исполнитель</button>
+    </div>
   </div>
 
-  <p id="status"></p>
+<script>
+  const tg = window.Telegram.WebApp;
+  tg.expand();
 
-  <script>
-    const tg = window.Telegram.WebApp;
-    tg.expand();
+  const user = tg.initDataUnsafe?.user;
 
-    const user = tg.initDataUnsafe?.user;
+  if (user) {
+    document.getElementById('greeting').innerText = `Привет, ${user.first_name || ''}!`;
+    document.getElementById('userInfo').innerHTML = `
+      @${user.username || 'без username'}<br>
+      ID: ${user.id}
+    `;
+  } else {
+    document.getElementById('userInfo').innerText = 'Не удалось получить данные пользователя';
+  }
 
-    if (user) {
-      document.getElementById('userInfo').innerText =
-        `Имя: ${user.first_name || ''} ${user.last_name || ''}\nUsername: @${user.username || 'нет'}\nTelegram ID: ${user.id}`;
-      document.getElementById('roleButtons').style.display = 'block';
-    } else {
-      document.getElementById('userInfo').innerText =
-        'Не удалось получить данные пользователя. Открой приложение через Telegram.';
-    }
-
-    function chooseRole(role) {
-      document.getElementById('status').innerText = `Выбрана роль: ${role}. Сохраняем...`;
-      // Здесь дальше подключим Supabase, чтобы сохранить пользователя в базу
-      console.log('Пользователь:', user, 'Роль:', role);
-    }
-  </script>
+  function chooseRole(role) {
+    tg.sendData(JSON.stringify({ role: role }));
+  }
+</script>
 
 </body>
 </html>
