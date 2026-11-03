@@ -3,8 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>РАБОТА РЯДОМ | РФ</title>
-<script src="https://telegram.org/js/telegram-web-app.js"></script>
+<title>Биржа заявок</title>
 <style>
   * {
     box-sizing: border-box;
@@ -21,28 +20,20 @@
     min-height: 100vh;
     background: linear-gradient(135deg, #020111 0%, #0b1033 25%, #0f2748 50%, #123a5c 70%, #1b4b6b 85%, #0a1a33 100%);
     background-size: 400% 400%;
-    animation: aurora 18s ease infinite;
+    animation: aurora 15s ease infinite;
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: flex-start;
-    padding-top: 14vh;
-    padding-left: 20px;
-    padding-right: 20px;
+    padding-top: 6vh;
     color: #ffffff;
     overflow-x: hidden;
     position: relative;
   }
 
-  /* мягкие световые пятна поверх фона, имитация сияния */
-  body::before, body::after {
+  body::before {
     content: "";
     position: fixed;
-    pointer-events: none;
-    z-index: 0;
-  }
-
-  body::before {
     top: -20%;
     left: -20%;
     width: 140%;
@@ -52,17 +43,8 @@
       radial-gradient(circle at 80% 20%, rgba(90, 140, 255, 0.18), transparent 45%),
       radial-gradient(circle at 50% 80%, rgba(130, 90, 255, 0.15), transparent 50%);
     animation: glow 12s ease-in-out infinite alternate;
-  }
-
-  body::after {
-    bottom: -25%;
-    right: -25%;
-    width: 120%;
-    height: 120%;
-    background:
-      radial-gradient(circle at 70% 70%, rgba(51, 144, 236, 0.12), transparent 45%),
-      radial-gradient(circle at 30% 60%, rgba(34, 193, 161, 0.10), transparent 40%);
-    animation: glow 16s ease-in-out infinite alternate-reverse;
+    pointer-events: none;
+    z-index: 0;
   }
 
   @keyframes aurora {
@@ -76,30 +58,13 @@
     100% { transform: translateY(20px) scale(1.1); opacity: 1; }
   }
 
-  .greeting {
-    font-size: 14px;
-    color: #9fd8ff;
-    margin-bottom: 12px;
-    z-index: 1;
-    opacity: 0.9;
-  }
-
   .title {
-    font-size: 24px;
+    font-size: 22px;
     font-weight: 700;
     letter-spacing: 1px;
     margin-bottom: 8px;
     z-index: 1;
-    text-align: center;
     text-shadow: 0 0 12px rgba(100, 200, 255, 0.6);
-  }
-
-  .title span {
-    background: linear-gradient(90deg, #5aa0ff, #22c1a1);
-    -webkit-background-clip: text;
-    background-clip: text;
-    color: transparent;
-    text-shadow: none;
   }
 
   .subtitle {
@@ -268,11 +233,9 @@
 </head>
 <body>
 
-
-  <!-- ===================== ГЛАВНАЯ ===================== -->
+<!-- ===================== ГЛАВНАЯ ===================== -->
 <div class="screen active" id="screen-main">
-  <div class="greeting" id="greeting">👋 Добро пожаловать!</div>
-  <div class="title">РАБОТА РЯДОМ <span>| РФ</span></div>
+  <div class="title">Биржа заявок</div>
   <div class="subtitle">Находи задачи рядом или заказывай работу быстро и удобно</div>
   <div class="buttons">
     <div class="glass-btn" onclick="goTo('screen-role-customer')">Я заказчик</div>
@@ -332,104 +295,241 @@
   </div>
 </div>
 
-  <body>
+<script>
+/* ===================== ДАННЫЕ: ОКРУГА И ГОРОДА ===================== */
+const regions = {
+  "Центральный ФО": ["Москва","Воронеж","Ярославль","Рязань","Липецк","Тула","Курск","Белгород","Тверь","Смоленск","Калуга","Брянск","Иваново","Владимир","Кострома","Орёл","Тамбов"],
+  "Северо-Западный ФО": ["Санкт-Петербург","Калининград","Архангельск","Мурманск","Вологда","Великий Новгород","Псков","Петрозаводск","Сыктывкар","Череповец"],
+  "Южный ФО": ["Ростов-на-Дону","Краснодар","Волгоград","Астрахань","Сочи","Севастополь","Симферополь","Новороссийск","Таганрог"],
+  "Северо-Кавказский ФО": ["Ставрополь","Махачкала","Владикавказ","Грозный","Нальчик","Черкесск","Магас"],
+  "Приволжский ФО": ["Казань","Нижний Новгород","Самара","Уфа","Пермь","Саратов","Ульяновск","Ижевск","Оренбург","Пенза","Киров","Чебоксары","Саранск","Йошкар-Ола","Тольятти","Набережные Челны"],
+  "Уральский ФО": ["Екатеринбург","Челябинск","Тюмень","Курган","Сургут","Нижневартовск","Магнитогорск"],
+  "Сибирский ФО": ["Новосибирск","Омск","Красноярск","Барнаул","Иркутск","Кемерово","Томск","Новокузнецк","Абакан","Чита"],
+  "Дальневосточный ФО": ["Владивосток","Хабаровск","Якутск","Благовещенск","Южно-Сахалинск","Улан-Удэ","Петропавловск-Камчатский","Магадан"]
+};
 
-   <!-- ===== ТИТУЛЬНЫЙ ЭКРАН ===== -->
-  <div id="screen-main" class="screen active">
-    <div class="hello" id="helloText">👋 Добро пожаловать!</div>
-    <div class="title">РАБОТА РЯДОМ</div>
-    <div class="subtitle">биржа заявок по РФ</div>
-    <div class="buttons">
-      <button class="glass-btn" onclick="goTo('screen-customer')">Найти исполнителя</button>
-      <button class="glass-btn" onclick="goTo('screen-executor')">Стать исполнителем</button>
+/* ===================== НАВИГАЦИЯ ===================== */
+function goTo(id){
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  window.scrollTo(0,0);
+}
+
+/* ===================== РЕГИОНЫ/ГОРОДА ===================== */
+function renderRegions(){
+  const box = document.getElementById('regions-list');
+  box.innerHTML = '';
+  Object.keys(regions).forEach(r => {
+    const div = document.createElement('div');
+    div.className = 'order-item';
+    div.innerHTML = `<h3>${r}</h3><p>${regions[r].length} городов</p>`;
+    div.onclick = () => openCities(r);
+    box.appendChild(div);
+    box.appendChild(document.createElement('hr')).style.borderColor = 'rgba(255,255,255,0.1)';
+  });
+}
+function openCities(region){
+  document.getElementById('selected-region-title').textContent = region;
+  const box = document.getElementById('cities-list');
+  box.innerHTML = '';
+  regions[region].forEach(city => {
+    const chip = document.createElement('div');
+    chip.className = 'city-chip';
+    chip.textContent = city;
+    chip.onclick = () => openOrdersForCity(city);
+    box.appendChild(chip);
+  });
+  goTo('screen-cities');
+}
+
+/* ===================== ХРАНИЛИЩЕ ЗАЯВОК ===================== */
+function getOrders(){
+  return JSON.parse(localStorage.getItem('orders') || '[]');
+}
+function saveOrders(list){
+  localStorage.setItem('orders', JSON.stringify(list));
+}
+
+/* ===================== 11 ШАГОВ ВИЗАРДА ===================== */
+const steps = [
+  { key: "title", label: "Название заявки", type: "text", placeholder: "Например: Собрать шкаф" },
+  { key: "category", label: "Категория работы", type: "select", options: ["Ремонт","Доставка","Уборка","IT / компьютерная помощь","Сборка мебели","Грузоперевозки","Репетиторство","Красота и здоровье","Другое"] },
+  { key: "description", label: "Полное описание — что нужно сделать", type: "textarea", placeholder: "Опиши задачу подробно" },
+  { key: "region", label: "Округ", type: "select-region" },
+  { key: "city", label: "Город", type: "select-city" },
+  { key: "address", label: "Адрес / место выполнения", type: "text", placeholder: "Улица, ориентир" },
+  { key: "date", label: "Дата выполнения", type: "date" },
+  { key: "time", label: "Время выполнения", type: "time" },
+  { key: "price", label: "Оплата (сумма, ₽)", type: "number", placeholder: "Например: 3000" },
+  { key: "requirements", label: "Требования к исполнителю", type: "textarea", placeholder: "Опыт, инструменты, возраст и т.д." },
+  { key: "contact", label: "Контакт для связи (Telegram @username или ссылка)", type: "text", placeholder: "@username" }
+];
+
+let currentStep = 0;
+let wizardData = {};
+
+function startWizard(){
+  currentStep = 0;
+  wizardData = {};
+  goTo('screen-wizard');
+  renderStep();
+}
+
+function renderStep(){
+  const s = steps[currentStep];
+  document.getElementById('step-indicator').textContent = `Шаг ${currentStep+1} из ${steps.length}`;
+  const body = document.getElementById('wizard-body');
+  let html = `<label>${s.label}</label>`;
+
+  if (s.type === "text" || s.type === "number" || s.type === "date" || s.type === "time") {
+    html += `<input type="${s.type}" id="field-${s.key}" placeholder="${s.placeholder||''}" value="${wizardData[s.key]||''}">`;
+  } else if (s.type === "textarea") {
+    html += `<textarea id="field-${s.key}" placeholder="${s.placeholder||''}">${wizardData[s.key]||''}</textarea>`;
+  } else if (s.type === "select") {
+    html += `<select id="field-${s.key}"><option value="">-- выбери --</option>`;
+    s.options.forEach(o => {
+      html += `<option value="${o}" ${wizardData[s.key]===o?'selected':''}>${o}</option>`;
+    });
+    html += `</select>`;
+  } else if (s.type === "select-region") {
+    html += `<select id="field-${s.key}" onchange="updateCityOptions()"><option value="">-- выбери округ --</option>`;
+    Object.keys(regions).forEach(r => {
+      html += `<option value="${r}" ${wizardData.region===r?'selected':''}>${r}</option>`;
+    });
+    html += `</select>`;
+  } else if (s.type === "select-city") {
+    const regionSel = wizardData.region;
+    html += `<select id="field-${s.key}"><option value="">-- сначала выбери округ --</option>`;
+    if (regionSel && regions[regionSel]) {
+      regions[regionSel].forEach(c => {
+        html += `<option value="${c}" ${wizardData.city===c?'selected':''}>${c}</option>`;
+      });
+    }
+    html += `</select>`;
+  }
+
+  html += `<div class="error" id="error-${s.key}">Это поле обязательно для заполнения</div>`;
+  body.innerHTML = html;
+
+  document.getElementById('btn-prev').style.display = currentStep === 0 ? 'none' : 'block';
+  document.getElementById('btn-next').textContent = currentStep === steps.length - 1 ? 'Опубликовать заявку' : 'Далее';
+}
+
+function updateCityOptions(){
+  wizardData.region = document.getElementById('field-region').value;
+}
+
+function validateStep(){
+  const s = steps[currentStep];
+  const el = document.getElementById(`field-${s.key}`);
+  const val = el.value.trim();
+  const errorEl = document.getElementById(`error-${s.key}`);
+  if (!val) {
+    errorEl.style.display = 'block';
+    el.style.border = '1px solid #ff6b6b';
+    return false;
+  }
+  errorEl.style.display = 'none';
+  el.style.border = '1px solid rgba(255,255,255,0.25)';
+  wizardData[s.key] = val;
+  return true;
+}
+
+function nextStep(){
+  if (!validateStep()) return;
+  if (currentStep === steps.length - 1) {
+    publishOrder();
+    return;
+  }
+  currentStep++;
+  renderStep();
+}
+
+function prevStep(){
+  currentStep--;
+  renderStep();
+}
+
+function publishOrder(){
+  const orders = getOrders();
+  const order = { ...wizardData, id: Date.now(), taken: false };
+  orders.push(order);
+  saveOrders(orders);
+  alert('Заявка опубликована!');
+  goTo('screen-role-customer');
+}
+
+/* ===================== МОИ ЗАЯВКИ (заказчик) ===================== */
+function renderMyOrders(){
+  const box = document.getElementById('my-orders-list');
+  box.style.display = 'block';
+  const orders = getOrders();
+  if (!orders.length) {
+    box.innerHTML = '<p>Пока нет заявок</p>';
+    return;
+  }
+  box.innerHTML = orders.map(o => `
+    <div class="order-item" style="margin-bottom:12px;">
+      <h3>${o.title}</h3>
+      <p><span class="tag">${o.category}</span><span class="tag">${o.city}</span></p>
+      <p>Статус: ${o.taken ? '✅ взята исполнителем' : '🕒 ожидает исполнителя'}</p>
     </div>
-  </div>
+  `).join('<hr style="border-color:rgba(255,255,255,0.1)">');
+}
 
-  <script>
-    (function () {
-      try {
-        var tg = window.Telegram && window.Telegram.WebApp;
-        if (tg) {
-          tg.expand();
-          var user = tg.initDataUnsafe && tg.initDataUnsafe.user;
-          if (user && user.first_name) {
-            document.getElementById('helloText').textContent = '👋 Привет, ' + user.first_name + '!';
-          }
-        }
-      } catch (e) {}
-    })();
-  </script>
-   
-  <!-- ===== ЭКРАН: ЗАКАЗЧИК ===== -->
-  <div id="screen-customer" class="screen">
-    <button class="btn-back" onclick="goMain()">← Назад</button>
-    <div class="screen-title">Разместить заявку</div>
-    <div class="card">
-      <button class="btn" onclick="openWizard()">Создать заявку</button>
-      <button class="btn secondary" onclick="openCustomerOrders()">Мои заявки</button>
-    </div>
-  </div>
+/* ===================== ИСПОЛНИТЕЛЬ: СПИСОК ЗАЯВОК В ГОРОДЕ ===================== */
+let currentCity = null;
 
-  <!-- ===== ЭКРАН: ВИЗАРД СОЗДАНИЯ ЗАЯВКИ ===== -->
-  <div id="screen-wizard" class="screen">
-    <button class="btn-back" onclick="openCustomer()">← Назад</button>
-    <div class="screen-title">Новая заявка</div>
-    <div class="card">
-      <div class="wizard-progress">
-        <div class="wizard-step-dot active" id="dot-0"></div>
-        <div class="wizard-step-dot" id="dot-1"></div>
-        <div class="wizard-step-dot" id="dot-2"></div>
-        <div class="wizard-step-dot" id="dot-3"></div>
+function openOrdersForCity(city){
+  currentCity = city;
+  document.getElementById('selected-city-title').textContent = `Заявки — ${city}`;
+  const orders = getOrders().filter(o => o.city === city && !o.taken);
+  const box = document.getElementById('orders-list');
+  if (!orders.length) {
+    box.innerHTML = '<div class="card">Пока нет заявок в этом городе</div>';
+  } else {
+    box.innerHTML = orders.map(o => `
+      <div class="card order-item" onclick="openOrderDetail(${o.id})">
+        <h3>${o.title}</h3>
+        <p><span class="tag">${o.category}</span></p>
+        <p>💰 ${o.price} ₽ · 📅 ${o.date} ${o.time}</p>
       </div>
+    `).join('');
+  }
+  goTo('screen-orders');
+}
 
-      <div class="wizard-step active" id="wstep-0">
-        <div class="wizard-step-title">Категория работ</div>
-        <div class="field">
-          <select id="orderCategory">
-            <option value="">— Выберите категорию —</option>
-            <option>Электрика</option>
-            <option>Сантехника</option>
-            <option>Ремонт и отделка</option>
-            <option>Сборка мебели</option>
-            <option>Клининг</option>
-            <option>Грузоперевозки</option>
-            <option>IT и компьютеры</option>
-            <option>Другое</option>
-          </select>
-        </div>
-        <button class="btn" onclick="wizardNext()">Далее</button>
-      </div>
+let currentOrderId = null;
 
-      <div class="wizard-step" id="wstep-1">
-        <div class="wizard-step-title">Описание задачи</div>
-        <div class="field">
-          <label>Что нужно сделать?</label>
-          <textarea id="orderDesc" placeholder="Опишите задачу подробно..."></textarea>
-        </div>
-        <button class="btn" onclick="wizardNext()">Далее</button>
-      </div>
+function openOrderDetail(id){
+  currentOrderId = id;
+  const order = getOrders().find(o => o.id === id);
+  const body = document.getElementById('order-detail-body');
+  body.innerHTML = `
+    <h2>${order.title}</h2>
+    <p><span class="tag">${order.category}</span><span class="tag">${order.city}</span></p>
+    <p><b>Что нужно сделать:</b> ${order.description}</p>
+    <p><b>Адрес:</b> ${order.address}</p>
+    <p><b>Когда:</b> ${order.date} в ${order.time}</p>
+    <p><b>Оплата:</b> ${order.price} ₽</p>
+    <p><b>Требования:</b> ${order.requirements}</p>
+    <p><b>Контакт:</b> <span class="contact-locked" id="contact-field">${order.contact}</span></p>
+  `;
+  goTo('screen-order-detail');
+}
 
-      <div class="wizard-step" id="wstep-2">
-        <div class="wizard-step-title">Бюджет</div>
-        <div class="field">
-          <label>Сумма в рублях</label>
-          <input type="number" id="orderBudget" min="0" placeholder="Например: 3000">
-        </div>
-        <button class="btn" onclick="wizardNext()">Далее</button>
-      </div>
+function takeOrder(){
+  const orders = getOrders();
+  const idx = orders.findIndex(o => o.id === currentOrderId);
+  if (idx === -1) return;
+  orders[idx].taken = true;
+  saveOrders(orders);
+  document.getElementById('contact-field').classList.remove('contact-locked');
+  alert('Контакт открыт! Заявка закреплена за тобой.');
+}
 
-      <div class="wizard-step" id="wstep-3">
-        <div class="wizard-step-title">Сроки и публикация</div>
-        <div class="field">
-          <label>Когда выполнить?</label>
-          <select id="orderDeadline">
-            <option>Сегодня</option>
-            <option>В течение 3 дней</option>
-            <option>В течение недели</option>
-            <option>Не горит</option>
-          </select>
-        </div>
-        <button class="btn" onclick="publishOrder()">Опубликовать заявку</button>
-      </div>
-    </div>
-  </div>
+/* ===================== ИНИЦИАЛИЗАЦИЯ ===================== */
+renderRegions();
+</script>
+</body>
+</html>
